@@ -70,10 +70,10 @@ function getProfile(){
     db.collection("users").where("uid", "==", localStorage.getItem('uid'))
     .get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-            document.getElementById("userName").innerHTML=doc.data().name;
-            document.getElementById("userEmail").innerHTML=doc.data().email;
             document.getElementById("userName").style.color = 'white';
             document.getElementById("userEmail").style.color = 'white';
+            document.getElementById("userName").innerHTML=doc.data().name;
+            document.getElementById("userEmail").innerHTML=doc.data().email;
         });
     })
     .catch(function(error) {
