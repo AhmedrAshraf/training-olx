@@ -104,38 +104,51 @@ function logout() {
 }
 
 function post() {
+  let file = document.getElementById("img").files[0];
   let title = document.getElementById("Title").value;
   let price = document.getElementById("Price").value;
   let Description = document.getElementById("Description").value;
+  if (file && title !== "" && price !== "" && Description !== "") {
+    var storageRef = firebase.storage().ref();
+    var uploadTask = storageRef.child(`images/${file.name}`).put(file);
 
-  db.collection("ads")
-    .add({
-      title,
-      price,
-      Description,
-      uid: localStorage.getItem("uid")
-    })
-    .then(() => {
-      alert("your add is live on olx");
-
-      document.getElementById("Title").value = "";
-      document.getElementById("Price").value = "";
-      document.getElementById("Description").value = "";
+    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+      db.collection("ads")
+        .add({
+          title,
+          price,
+          Description,
+          downloadURL,
+          uid: localStorage.getItem("uid")
+        })
+        .then(() => {
+          alert("your add is live on olx");
+          document.getElementById("Title").value = "";
+          document.getElementById("Price").value = "";
+          document.getElementById("Description").value = "";
+        });
     });
+  } else {
+    alert("one of the field is empty");
+  }
 }
 
 function getAllAds() {
   db.collection("ads").onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
-      factory(change.doc.data(), change.doc.id);
+      factory(change.doc.data());
     });
   });
 }
 
-function factory(data, id) {
-  
+function factory(data) {
+  console.log("factory -> data", data)
   let container = document.getElementById("ads");
   let div = document.createElement("div");
+  div.setAttribute("class", 'box');
+  let img = document.createElement("img");
+  img.setAttribute("src", data.downloadURL);
+  img.setAttribute("class", 'image');
   let h5 = document.createElement("h5");
   let h3 = document.createElement("h3");
   let p = document.createElement("p");
@@ -144,14 +157,14 @@ function factory(data, id) {
   let price = document.createTextNode(data.price);
   let Description = document.createTextNode(data.Description);
 
-  h3.appendChild(title)
-  h5.appendChild(price)
-  p.appendChild(Description)
-  
-  div.appendChild(h3)
-  div.appendChild(h5)
-  div.appendChild(p)
+  h3.appendChild(title);
+  h5.appendChild(price);
+  p.appendChild(Description);
 
-  container.appendChild(div)
+  div.appendChild(img);
+  div.appendChild(h3);
+  div.appendChild(h5);
+  div.appendChild(p);
 
+  container.appendChild(div);
 }

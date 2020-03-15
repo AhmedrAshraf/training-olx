@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-storage.js"></script>
 </head>
 <body onload="mount()">
    
@@ -36,6 +37,10 @@
         <div class="form-group">
           <label for="exampleInputEmail1">Description</label>
           <input type="Description" id="Description" class="form-control" aria-describedby="emailHelp" placeholder="Enter Description">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Upload Image</label>
+          <input type="file" id="img" />
         </div>
 
         <div class="modal-footer">
